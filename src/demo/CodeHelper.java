@@ -17,7 +17,14 @@ public class CodeHelper {
 	public static String getCode(String path) {
 		int pos = path.lastIndexOf(File.separator);
 		String name = path.substring(pos + 1);
-		String code = name.split("_")[0];
+		String code = "";
+		int pos1 = name.indexOf("_");
+		if (pos1 >= 0) {
+			code = name.substring(0, pos1);
+		} else {
+			int pos2 = name.indexOf(".");
+			code = name.substring(0, pos2);
+		}
 		return code;
 	}
 	

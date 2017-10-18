@@ -39,7 +39,7 @@ public class HTIHelper {
 	//学科id
 	private static final String SUBJECT_ID = SUBJECT_ID_HUAXUE;
 	//目录
-	private static final String dirPath = "C:\\Users\\39390\\Desktop\\0801000";
+	private static final String dirPath = "C:\\Users\\39390\\Desktop\\shuxue\\八年级数学总\\0413121";
 	//结果目录
 	private static final String resultPath = "C:\\Users\\39390\\Desktop\\hti\\result\\demo";
 
@@ -95,7 +95,7 @@ public class HTIHelper {
 			String code = CodeHelper.getCode(path);
 			int size1 = body.select(":containsOwn(++++)").size() + 1;
 			int size2 = body.select(":containsOwn($$" + code + "$$)").size();
-			if (size1 < size2) {
+			if (size1 != size2) {
 				System.out.println("当前文档:" + path + "的++++和$$" + code + "$$个数不同，exit。。。");
 				System.exit(0);
 			}
@@ -104,17 +104,17 @@ public class HTIHelper {
 			List<Element> title = new ArrayList();
 			List<Element> answer = new ArrayList();
 			int status = STATUS_TITLE;
-			int k = 0;
+			int m = 0;
 			for (int j = 0; j < ps.size(); j++) {
-				System.out.println("当前处理文档:" + path + "的第" + (k+1) + "题的第" + (j+1) + "个段落。。。");
+				System.out.println("当前处理文档:" + path + "的第" + (m+1) + "题的第" + (j+1) + "个段落。。。");
 				Element p = ps.get(j);
 				boolean flag = false;
 				Document docp = null;
 				docp = Jsoup.parseBodyFragment("<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal'>/p>");
 				Elements spans = p.getElementsByTag("span");
-				for (int m = 0; m < spans.size(); m++) {
+				for (int k = 0; k < spans.size(); k++) {
 				//for (Element span : spans) {
-					Element span = spans.get(m);
+					Element span = spans.get(k);
 					String endTag = span.text();
 					//title结束
 					if (status == STATUS_TITLE) {
@@ -137,7 +137,7 @@ public class HTIHelper {
 					} else if (status == STATUS_ANSWER) { //answer结束
 						if (endTag.equals("++++")) {
 							status = STATUS_TITLE;
-							k++;
+							m++;
 							if (docp != null && !(docp.children().isEmpty())) {
 								docp.select(":containsOwn(++++)").remove();
 								String phtml = docp.body().html();
@@ -214,20 +214,20 @@ public class HTIHelper {
 			System.out.println("allEleTitles allEleAnswers allHtmlPath size is not eqouls!!!!!!!!!!!!!!!!!!!!");
 			System.exit(0);
 		}
-		for (int j = 0; j < allEleTitles.size(); j++) {
+		for (int i = 0; i < allEleTitles.size(); i++) {
 			List<String> strTitles = new ArrayList();
 			List<String> strAnswers = new ArrayList();
-			System.out.println("总共" + allHtmlPath.size() + "个文档，当前处理第" + (j+1) + "个文档:" + allHtmlPath.get(j) + "。。。");
-			List<List<Element>> eleTitles = allEleTitles.get(j);
-			List<List<Element>> eleAnswers = allEleAnswers.get(j);
-			for (int i = 0; i < eleTitles.size(); i++) {
-				System.out.println("当前处理文档:" + allHtmlPath.get(j) + "的第" + (i+1) + "题。。。");
+			System.out.println("总共" + allHtmlPath.size() + "个文档，当前处理第" + (i+1) + "个文档:" + allHtmlPath.get(i) + "。。。");
+			List<List<Element>> eleTitles = allEleTitles.get(i);
+			List<List<Element>> eleAnswers = allEleAnswers.get(i);
+			for (int j = 0; j < eleTitles.size(); j++) {
+				System.out.println("当前处理文档:" + allHtmlPath.get(i) + "的第" + (j+1) + "题。。。");
 				String question = "";
-				for (Element e : eleTitles.get(i)) {
+				for (Element e : eleTitles.get(j)) {
 					question += e.outerHtml();
 				}
 				String reply = "";
-				for (Element e : eleAnswers.get(i)) {
+				for (Element e : eleAnswers.get(j)) {
 					reply += e.outerHtml();
 				}
 				//question为空
@@ -323,21 +323,25 @@ public class HTIHelper {
 		}
 		for (int i = 0; i < allTitles.size(); i++) {
 			long time = System.currentTimeMillis();
-			List<String> strSQLs = new ArrayList();
+			List<String> strSQL = new ArrayList();
 			List<String> title = allTitles.get(i);
 			List<String> answer = allAnswers.get(i);
 			String path = allHtmlPath.get(i);
 			String code = CodeHelper.getCode(path);
 			String courseId = CodeHelper.getCourseId(code);
+			if (courseId == null || courseId.isEmpty()) {
+				System.out.println("code to course error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				System.exit(0);
+			}
 			//数学
 			for (int j = 0; j < title.size(); j++) {
 				String question = title.get(j);
 				String reply = answer.get(j);
 		        String sql = "insert into hti(code,title,answer,ctime,state,permision_id,subject_id,course_id)values" +
 		                "('"+code+"',\"" + question + "\",\"" + reply + "\",'" + time + "','0','3','" + SUBJECT_ID + "','"+courseId+"');\n";
-		        strSQLs.add(sql);
+		        strSQL.add(sql);
 			};
-			allSQL.add(strSQLs);
+			allSQL.add(strSQL);
 		}
 	}
 	
