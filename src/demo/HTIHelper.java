@@ -39,7 +39,7 @@ public class HTIHelper {
 	//学科id
 	private static final String SUBJECT_ID = SUBJECT_ID_HUAXUE;
 	//目录
-	private static final String dirPath = "C:\\Users\\39390\\Desktop\\hti\\hua_1\\2501000";
+	private static final String dirPath = "C:\\Users\\39390\\Desktop\\0801000";
 	//结果目录
 	private static final String resultPath = "C:\\Users\\39390\\Desktop\\hti\\result\\demo";
 
@@ -95,7 +95,7 @@ public class HTIHelper {
 			String code = CodeHelper.getCode(path);
 			int size1 = body.select(":containsOwn(++++)").size() + 1;
 			int size2 = body.select(":containsOwn($$" + code + "$$)").size();
-			if (size1 != size2) {
+			if (size1 < size2) {
 				System.out.println("当前文档:" + path + "的++++和$$" + code + "$$个数不同，exit。。。");
 				System.exit(0);
 			}
@@ -138,7 +138,7 @@ public class HTIHelper {
 						if (endTag.equals("++++")) {
 							status = STATUS_TITLE;
 							k++;
-							if (docp != null) {
+							if (docp != null && !(docp.children().isEmpty())) {
 								docp.select(":containsOwn(++++)").remove();
 								String phtml = docp.body().html();
 								if (phtml == null || phtml.length() < 8) {
@@ -152,7 +152,7 @@ public class HTIHelper {
 							eleAnswers.add(answer);
 							title = new ArrayList();
 							answer = new ArrayList();
-							if (span.getElementsByTag("br").isEmpty()/* && spans.size() == 1*/) {
+							if (span.getElementsByTag("br").isEmpty() && span.parent().getElementsByTag("br").isEmpty()/* && spans.size() == 1*/) {
 								flag = true;
 							} else {
 								span.remove();
@@ -269,11 +269,11 @@ public class HTIHelper {
 					int pos2 = imgPath.lastIndexOf('.');
 					String imgName = imgPath.substring(pos1 + 1, pos2);
 					String prefix = "";
-					if (SUBJECT_ID == SUBJECT_ID_SHUXUE) {
+					if (SUBJECT_ID.equals(SUBJECT_ID_SHUXUE)) {
 						prefix = "csg2_hti_shu_";
-					} else if (SUBJECT_ID == SUBJECT_ID_WULI) {
+					} else if (SUBJECT_ID.equals(SUBJECT_ID_WULI)) {
 						prefix = "csg2_hti_wu_";
-					} else if (SUBJECT_ID == SUBJECT_ID_HUAXUE) {
+					} else if (SUBJECT_ID.equals(SUBJECT_ID_HUAXUE)) {
 						prefix = "csg2_hti_hua_";
 					}
 					String newPicName = prefix + imgName + "_" + time + ".png";
@@ -296,11 +296,11 @@ public class HTIHelper {
 					int pos2 = imgPath.lastIndexOf('.');
 					String imgName = imgPath.substring(pos1 + 1, pos2);
 					String prefix = "";
-					if (SUBJECT_ID == SUBJECT_ID_SHUXUE) {
+					if (SUBJECT_ID.equals(SUBJECT_ID_SHUXUE)) {
 						prefix = "csg2_hti_shu_";
-					} else if (SUBJECT_ID == SUBJECT_ID_WULI) {
+					} else if (SUBJECT_ID.equals(SUBJECT_ID_WULI)) {
 						prefix = "csg2_hti_wu_";
-					} else if (SUBJECT_ID == SUBJECT_ID_HUAXUE) {
+					} else if (SUBJECT_ID.equals(SUBJECT_ID_HUAXUE)) {
 						prefix = "csg2_hti_hua_";
 					}
 					String newPicName = prefix + imgName + "_" + time + ".png";
