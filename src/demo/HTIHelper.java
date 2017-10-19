@@ -22,6 +22,7 @@ public class HTIHelper {
 	private static final int STATUS_TITLE = 1;
 	private static final int STATUS_INFO = 2;
 	private static final int STATUS_ANSWER = 3;
+	private static final String domain = "http://rs.zhongcheng-video.com/";
 	private static List<List<List<Element>>> allEleTitles = new ArrayList();
 	private static List<List<List<Element>>> allEleAnswers = new ArrayList();
 	private static List<List<String>> allTitles = new ArrayList();
@@ -278,7 +279,7 @@ public class HTIHelper {
 						prefix = "csg2_hti_hua_";
 					}
 					String newPicName = prefix + imgName + "_" + time + ".png";
-					e.attr("src", newPicName);
+					e.attr("src", domain + newPicName);
 					if (DEBUG == false) {
 	                	QiniuHelper.upload(new File(allHtmlPath.get(i)).getParent() + File.separator + imgPath, newPicName);
 	                }
@@ -305,7 +306,7 @@ public class HTIHelper {
 						prefix = "csg2_hti_hua_";
 					}
 					String newPicName = prefix + imgName + "_" + time + ".png";
-	                e.attr("src", newPicName);
+	                e.attr("src", domain + newPicName);
 	                if (DEBUG == false) {
 	                	QiniuHelper.upload(new File(allHtmlPath.get(i)).getParent() + File.separator + imgPath, newPicName);
 	                }
