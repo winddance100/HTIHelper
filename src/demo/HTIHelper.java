@@ -93,6 +93,16 @@ public class HTIHelper {
 				System.exit(0);
 			}
 			Element body = doc.body();
+			//忽略文档首尾的++++
+			Elements ps = body.getElementsByTag("p");
+			if (ps.get(ps.size()-1).text().equals("++++")) {
+				//ps.get(ps.size()-1).remove();
+				ps.remove(ps.size()-1);
+			} else if (ps.get(0).text().equals("++++")) {
+				//ps.get(0).remove();
+				ps.remove(0);
+			}
+			//标记检查
 			String code = CodeHelper.getCode(path);
 			int size1 = body.select(":containsOwn(++++)").size() + 1;
 			int size2 = body.select(":containsOwn($$" + code + "$$)").size();
@@ -101,7 +111,6 @@ public class HTIHelper {
 				System.out.println("当前文档:" + path + "的++++和$$" + code + "$$或**个数不同，exit。。。");
 				System.exit(0);
 			}
-			Elements ps = body.getElementsByTag("p");
 			//每一题
 			List<Element> title = new ArrayList();
 			List<Element> answer = new ArrayList();
@@ -110,6 +119,11 @@ public class HTIHelper {
 			for (int j = 0; j < ps.size(); j++) {
 				System.out.println("当前处理文档:" + path + "的第" + (m+1) + "题的第" + (j+1) + "个段落。。。");
 				Element p = ps.get(j);
+				//忽略空白段落
+				if (p.text().trim().isEmpty()) {
+					//p.remove();
+					continue;
+				}
 				boolean flag = false;
 				Document docp = null;
 				docp = Jsoup.parseBodyFragment("<p class=MsoNormal style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:normal'>/p>");
