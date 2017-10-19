@@ -96,10 +96,10 @@ public class HTIHelper {
 			//忽略文档首尾的++++
 			Elements ps = body.getElementsByTag("p");
 			if (ps.get(ps.size()-1).text().equals("++++")) {
-				//ps.get(ps.size()-1).remove();
+				ps.get(ps.size()-1).remove();
 				ps.remove(ps.size()-1);
 			} else if (ps.get(0).text().equals("++++")) {
-				//ps.get(0).remove();
+				ps.get(0).remove();
 				ps.remove(0);
 			}
 			//标记检查
@@ -121,7 +121,7 @@ public class HTIHelper {
 				Element p = ps.get(j);
 				//忽略空白段落
 				if (p.text().trim().isEmpty()) {
-					//p.remove();
+					p.remove();
 					continue;
 				}
 				boolean flag = false;
