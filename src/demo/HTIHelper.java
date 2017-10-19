@@ -35,13 +35,13 @@ public class HTIHelper {
 	//化学
 	private static final String SUBJECT_ID_HUAXUE = "17";
 	//是否调试
-	private static final boolean DEBUG = true;
+	private static boolean DEBUG = true;
 	//学科id
-	private static final String SUBJECT_ID = SUBJECT_ID_HUAXUE;
+	private static String SUBJECT_ID = SUBJECT_ID_HUAXUE;
 	//目录
-	private static final String dirPath = "C:\\Users\\39390\\Desktop\\shuxue\\八年级数学总\\0413121";
+	private static String dirPath = "C:\\Users\\39390\\Desktop\\huaxue";
 	//结果目录
-	private static final String resultPath = "C:\\Users\\39390\\Desktop\\hti\\result\\demo";
+	private static String resultPath = "C:\\Users\\39390\\Desktop\\hti\\result\\demo";
 
 	//创建目标目录
 	public static void one() {
@@ -95,8 +95,9 @@ public class HTIHelper {
 			String code = CodeHelper.getCode(path);
 			int size1 = body.select(":containsOwn(++++)").size() + 1;
 			int size2 = body.select(":containsOwn($$" + code + "$$)").size();
-			if (size1 != size2) {
-				System.out.println("当前文档:" + path + "的++++和$$" + code + "$$个数不同，exit。。。");
+			int size3 = body.select(":containsOwn(**)").size();
+			if (size1 != size2 || size3 != 2*size2) {
+				System.out.println("当前文档:" + path + "的++++和$$" + code + "$$或**个数不同，exit。。。");
 				System.exit(0);
 			}
 			Elements ps = body.getElementsByTag("p");
@@ -400,6 +401,12 @@ public class HTIHelper {
 	
 	public static void main(String[] args){
 		// TODO Auto-generated method stub
+		if (args.length == 5) {
+			dirPath = args[1];
+			resultPath = args[2];
+			SUBJECT_ID = args[3];
+			DEBUG = !args[4].equals("false");
+		}
 		one();
 		two(dirPath);
 		three();
