@@ -93,12 +93,28 @@ public class HTIHelper {
 				System.exit(0);
 			}
 			Element body = doc.body();
-			//忽略文档首尾的++++
-			Elements ps = body.getElementsByTag("p");
+			//查找body下所有直接子节点
+			Elements ps = doc.select("body > div > *");
+			if (ps.size() < 2) {
+				ps = doc.select("body > *");
+			}
+			if (ps.size() < 2) {
+				System.out.println("find p tag error! file:" + path);
+				System.exit(0);
+			}
+			//删除空白段落
+			for (int j = ps.size()-1; j >= 0; j--) {
+				if (ps.get(j).text().trim().replaceAll("[\\u00A0]+", "").isEmpty()) {
+					ps.get(j).remove();
+					ps.remove(j);
+				}
+			}
+			//删除文档首尾的++++
 			if (ps.get(ps.size()-1).text().equals("++++")) {
 				ps.get(ps.size()-1).remove();
 				ps.remove(ps.size()-1);
-			} else if (ps.get(0).text().equals("++++")) {
+			}
+			if (ps.get(0).text().equals("++++")) {
 				ps.get(0).remove();
 				ps.remove(0);
 			}
@@ -107,7 +123,7 @@ public class HTIHelper {
 			int size1 = body.select(":containsOwn(++++)").size() + 1;
 			int size2 = body.select(":containsOwn($$" + code + "$$)").size();
 			int size3 = body.select(":containsOwn(**)").size();
-			if (size1 != size2 || size3 != 2*size2) {
+			if (size2 < 1 || size1 != size2 || size3 != 2*size2) {
 				System.out.println("当前文档:" + path + "的++++和$$" + code + "$$或**个数不同，exit。。。");
 				System.exit(0);
 			}
@@ -207,12 +223,12 @@ public class HTIHelper {
 			}
 			//question为空
 			if (title == null || title.isEmpty()) {
-				System.out.println("ele question is empty!!!!!!!!!!!!!!!!!!!!");
+				System.out.println("ele title is empty!!!!!!!!!!!!!!!!!!!!");
 				System.exit(0);
 			}
 			//reply为空
 			if (answer == null || answer.isEmpty()) {
-				System.out.println("ele reply is empty!!!!!!!!!!!!!!!!!!!!");
+				System.out.println("ele answer is empty!!!!!!!!!!!!!!!!!!!!");
 				System.exit(0);
 			}
 			//最后一题要加上，因为没有++++标志
